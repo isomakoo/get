@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./main.css" />
+  <title>Document</title>
+</head>
+<body>
+  <h1>Salom</h1>
+  <ul id="box-list"></ul>
+  <form id="home-form">
+    <input type="text" placeholder="text" id="home-input" required />
+    <input type="text" placeholder="text" id="home-inputcha" required />
+    <button type="submit" id="home-btn">uzgartirish</button>
+  </form>
+  <div class="list">
+    uchirilisinmi
+    <button id="uchbtn">uchirish</button>
+  </div>
+  <script>
+    const box = document.querySelector("#box-list");
+    const homeform = document.querySelector("#home-form");
+    const nameru = document.querySelector("#home-input");
+    const nameuz = document.querySelector("#home-inputcha");
+    const list = document.querySelector(".list");
+
+    fetch("https://autoapi.dezinfeksiyatashkent.uz/api/categories")
+      .then((response) => response.json())
+      .then((data) => {
+        data.data.forEach((element) => {
+          const listitem = document.createElement("li");
+          const paragraf = document.createElement("p");
+
+          paragraf.textContent = element.name_en;
+          const editbtn = document.createElement("button");
+          editbtn.textContent = "Edit";
+          const deletbtn = document.createElement("button");
+          deletbtn.textContent = "Uchirish";
+          deletbtn.classList.add("deletebtnn");
+          editbtn.onclick = () => {
+            homeform.style.display = "block";
+            editFunction(element.id);
+          };
+          deletbtn.onclick = () => {
+            list.style.display = "block";
+            deleteFunction(element.id);
+          };
+          listitem.appendChild(paragraf);
+          listitem.appendChild(editbtn);
+          listitem.appendChild(deletbtn);
+          box.appendChild(listitem);
+        });
+      });
+
+    function editFunction(id) {
+      console.log(id);
+      homeform.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        fetch(
+          `https://autoapi.dezinfeksiyatashkent.uz/api/categories/${id}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name_en: nameru.value,
+              name_ru: nameuz.value,
+            }),
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            window.location.reload();
+            console.log(data);
+          });
+      });
+    }
+
+    const uchbtn = document.querySelector("#uchbtn"); 
+
+    function deleteFunction(id) {
+      uchbtn.addEventListener("click", (e) => { 
+        e.preventDefault();
+        fetch(
+          `https://autoapi.dezinfeksiyatashkent.uz/api/categories/${id}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            window.location.reload();
+            console.log(data);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
+
