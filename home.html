@@ -12,18 +12,20 @@
   <form id="home-form">
     <input type="text" placeholder="text" id="home-input" required />
     <input type="text" placeholder="text" id="home-inputcha" required />
-    <button type="submit" id="home-btn">uzgartirish</button>
+    <button type="submit" class="home-btn">uzgartirish</button> <!-- Changed id to class -->
   </form>
   <div class="list">
     uchirilisinmi
-    <button id="uchbtn">uchirish</button>
+    <button id="uchbtn" type="submit">uchirish</button>
   </div>
   <script>
     const box = document.querySelector("#box-list");
     const homeform = document.querySelector("#home-form");
     const nameru = document.querySelector("#home-input");
     const nameuz = document.querySelector("#home-inputcha");
+    const uchbtn = document.querySelector("#uchbtn"); // Corrected selection
     const list = document.querySelector(".list");
+    const homebtn = document.querySelector(".home-btn"); // Corrected selection
 
     fetch("https://autoapi.dezinfeksiyatashkent.uz/api/categories")
       .then((response) => response.json())
@@ -37,7 +39,6 @@
           editbtn.textContent = "Edit";
           const deletbtn = document.createElement("button");
           deletbtn.textContent = "Uchirish";
-          deletbtn.classList.add("deletebtnn");
           editbtn.onclick = () => {
             homeform.style.display = "block";
             editFunction(element.id);
@@ -55,8 +56,9 @@
 
     function editFunction(id) {
       console.log(id);
-      homeform.addEventListener("click", (e) => {
+      homebtn.addEventListener("submit", (e) => {
         e.preventDefault();
+        
 
         fetch(
           `https://autoapi.dezinfeksiyatashkent.uz/api/categories/${id}`,
@@ -80,10 +82,8 @@
       });
     }
 
-    const uchbtn = document.querySelector("#uchbtn"); 
-
     function deleteFunction(id) {
-      uchbtn.addEventListener("click", (e) => { 
+      uchbtn.addEventListener("click", (e) => {
         e.preventDefault();
         fetch(
           `https://autoapi.dezinfeksiyatashkent.uz/api/categories/${id}`,
@@ -97,7 +97,7 @@
         )
           .then((response) => response.json())
           .then((data) => {
-            window.location.reload();
+             window.location.reload();
             console.log(data);
           });
       });
@@ -105,4 +105,3 @@
   </script>
 </body>
 </html>
-

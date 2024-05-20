@@ -16,6 +16,7 @@ btnjon.addEventListener("click",(e)=>{
   }),
 }).then(response => response.json())
   .then(data => {
+    console.log(data.data.tokens.accessToken.token);
     localStorage.setItem("access_token", data.data.tokens.accessToken.token )
     window.location.href="home.html"
   })
